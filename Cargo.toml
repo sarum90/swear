@@ -1,0 +1,6 @@
+[package]
+authors = ["Marcus Henry Ewert <sarum90@gmail.com>"]
+name = "swear"
+version = "0.1.0"
+[dependencies]
+boxfnonce = "0.1.0"
