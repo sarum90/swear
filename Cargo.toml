@@ -1,6 +1,9 @@
 [package]
-authors = ["Marcus Henry Ewert <sarum90@gmail.com>"]
+authors = ["Marcus Henry Ewert <user@marcushenryewert.com>"]
 name = "swear"
 version = "0.1.0"
+license = "MIT"
+description = "A bad implementation in Rust of an approximation of a JS A+ Promise."
+readme = "README.md"
 [dependencies]
 boxfnonce = "0.1.0"
