@@ -1,5 +1,7 @@
 # Swear
 
+[![Build Status](https://travis-ci.org/sarum90/swear.svg?branch=master)](https://travis-ci.org/sarum90/swear)
+
 This is intended to be a bad implementation in Rust of some approximation of
 [JS A+ Promises](https://promisesaplus.com/).
 
