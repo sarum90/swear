@@ -9,5 +9,6 @@
 // cannot live on the stack of the caller to schedule.
 pub trait Scheduler<'a>: Clone {
     fn schedule<F: 'a>(&self, f: F)
-        where F : FnOnce();
+    where
+        F: FnOnce();
 }

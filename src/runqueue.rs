@@ -7,25 +7,25 @@ use boxfnonce::BoxFnOnce;
 use schedule::Scheduler;
 
 struct Sender<T> {
-    buffer: Rc<RefCell<VecDeque<T>>>
+    buffer: Rc<RefCell<VecDeque<T>>>,
 }
 
 impl<T> Sender<T> {
-    fn send(&self, t : T) {
+    fn send(&self, t: T) {
         self.buffer.borrow_mut().push_back(t)
     }
 }
 
 impl<T> Clone for Sender<T> {
     fn clone(&self) -> Self {
-        return Sender{
+        return Sender {
             buffer: Rc::clone(&self.buffer),
         };
     }
 }
 
 struct Reciever<T> {
-    buffer: Rc<RefCell<VecDeque<T>>>
+    buffer: Rc<RefCell<VecDeque<T>>>,
 }
 
 impl<T> Reciever<T> {
@@ -36,23 +36,30 @@ impl<T> Reciever<T> {
 
 fn make_channel<T>() -> (Sender<T>, Reciever<T>) {
     let b = Rc::new(RefCell::new(VecDeque::new()));
-    (Sender{buffer: Rc::clone(&b)}, Reciever{buffer: b})
+    (
+        Sender {
+            buffer: Rc::clone(&b),
+        },
+        Reciever { buffer: b },
+    )
 }
 
 #[derive(Clone)]
 pub struct Queuer<'a> {
-    sender: Sender<BoxFnOnce<'a, ()>>
+    sender: Sender<BoxFnOnce<'a, ()>>,
 }
 
 impl<'a> Scheduler<'a> for Queuer<'a> {
-    fn schedule<F: 'a>(&self, f: F) 
-      where F: FnOnce() {
+    fn schedule<F: 'a>(&self, f: F)
+    where
+        F: FnOnce(),
+    {
         self.sender.send(BoxFnOnce::<'a, ()>::from(f));
     }
 }
 
 pub struct Reactor<'a> {
-    receiver: Reciever<BoxFnOnce<'a, ()>>
+    receiver: Reciever<BoxFnOnce<'a, ()>>,
 }
 
 impl<'a> Reactor<'a> {
@@ -65,14 +72,7 @@ impl<'a> Reactor<'a> {
 
 pub fn make_runqueue<'a>() -> (Queuer<'a>, Reactor<'a>) {
     let (sdr, rcv) = make_channel::<BoxFnOnce<()>>();
-    return (
-        Queuer {
-            sender: sdr,
-        },
-        Reactor {
-            receiver: rcv,
-        }
-    )
+    return (Queuer { sender: sdr }, Reactor { receiver: rcv });
 }
 
 #[cfg(test)]
